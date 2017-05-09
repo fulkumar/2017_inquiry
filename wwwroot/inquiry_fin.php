@@ -4,7 +4,7 @@
 ob_start();
 session_start();
 
-// “ü—Í‚³‚ê‚½î•ñ‚ğæ“¾
+// å…¥åŠ›ã•ã‚ŒãŸæƒ…å ±ã‚’å–å¾—
 /*
 $email = (string)@$_POST['email'];
 $email = (string)filter_input(INPUT_POST, 'email');
@@ -18,49 +18,49 @@ foreach($params  as  $p) {
 }
 var_dump($input_data);
 
-// validate(î•ñ‚Í³‚µ‚¢H)
-$error_detail = array(); // ƒGƒ‰[î•ñŠi”[—p•Ï”
+// validate(æƒ…å ±ã¯æ­£ã—ã„ï¼Ÿ)
+$error_detail = array(); // ã‚¨ãƒ©ãƒ¼æƒ…å ±æ ¼ç´ç”¨å¤‰æ•°
 
-// •K{ƒ`ƒFƒbƒN
+// å¿…é ˆãƒã‚§ãƒƒã‚¯
 $must_params = array('email', 'body');
 foreach($must_params  as  $p) {
     if ('' === $input_data[$p]) {
-        // ƒGƒ‰[ˆ—
+        // ã‚¨ãƒ©ãƒ¼å‡¦ç†
         $error_detail["error_must_{$p}"] = true;
     }
 }
 
-// Œ^ƒ`ƒFƒbƒNFemail
-// XXX RFC”ñ€‹’‚ÌƒƒAƒh‚Í‚µ‚ç‚ñII
+// å‹ãƒã‚§ãƒƒã‚¯ï¼šemail
+// XXX RFCéæº–æ‹ ã®ãƒ¡ã‚¢ãƒ‰ã¯ã—ã‚‰ã‚“ï¼ï¼
 if (false === filter_var($input_data['email'], FILTER_VALIDATE_EMAIL)) {
-    // ƒGƒ‰[ˆ—
+    // ã‚¨ãƒ©ãƒ¼å‡¦ç†
     $error_detail["error_format_email"] = true;
 }
 
-// Œ^ƒ`ƒFƒbƒNF“ú•t
+// å‹ãƒã‚§ãƒƒã‚¯ï¼šæ—¥ä»˜
 if ('' !== $input_data['birthday']) {
     if (false === strtotime($input_data['birthday'])) {
-        // ƒGƒ‰[ˆ—
+        // ã‚¨ãƒ©ãƒ¼å‡¦ç†
         $error_detail["error_format_birthday"] = true;
     }
 }
 
-// ƒGƒ‰[”»’è
+// ã‚¨ãƒ©ãƒ¼åˆ¤å®š
 if (array() !== $error_detail) {
-    // ƒGƒ‰[“à—e‚ğƒZƒbƒVƒ‡ƒ“‚É•Û‚·‚é
+    // ã‚¨ãƒ©ãƒ¼å†…å®¹ã‚’ã‚»ãƒƒã‚·ãƒ§ãƒ³ã«ä¿æŒã™ã‚‹
     $_SESSION['buffer']['error_detail'] = $error_detail;
-    // “ü—Íî•ñ‚ğƒZƒbƒVƒ‡ƒ“‚É•Û‚·‚é
+    // å…¥åŠ›æƒ…å ±ã‚’ã‚»ãƒƒã‚·ãƒ§ãƒ³ã«ä¿æŒã™ã‚‹
     $_SESSION['buffer']['input'] = $input_data;
 //var_dump($error_detail);
-    // echo 'ƒGƒ‰[‚ª‚ ‚Á‚½‚ç‚µ‚¢II';
-    // “ü—Íƒy[ƒW‚É“Ë‚«•Ô‚·
+    // echo 'ã‚¨ãƒ©ãƒ¼ãŒã‚ã£ãŸã‚‰ã—ã„ï¼ï¼';
+    // å…¥åŠ›ãƒšãƒ¼ã‚¸ã«çªãè¿”ã™
     header('Location: ./inquiry.php');
     exit;
 }
-// ƒ_ƒ~[
-echo 'ƒf[ƒ^‚Ìvalidate‚ÍOK‚Å‚µ‚½II';
+// ãƒ€ãƒŸãƒ¼
+echo 'ãƒ‡ãƒ¼ã‚¿ã®validateã¯OKã§ã—ãŸï¼ï¼';
 
-// “ü—Í‚³‚ê‚½î•ñ‚ğDB‚Éinsert
+// å…¥åŠ›ã•ã‚ŒãŸæƒ…å ±ã‚’DBã«insert
 
-// u‚ ‚è‚ª‚Æ‚¤vPage‚Ìo—Í
+// ã€Œã‚ã‚ŠãŒã¨ã†ã€Pageã®å‡ºåŠ›
 

@@ -4,28 +4,28 @@
 ob_start();
 session_start();
 
-// Šm”F
+// ç¢ºèª
 //var_dump($_SESSION);
 
-// “ü—Í“à—e‚ğæ“¾
-//$input = $_SESSION['buffer']['input'] ?? []; // PHP 7.0ˆÈ~‚È‚ç‚±‚Á‚¿
+// å…¥åŠ›å†…å®¹ã‚’å–å¾—
+//$input = $_SESSION['buffer']['input'] ?? []; 
 if (true === isset($_SESSION['buffer']['input'])) {
     $input = $_SESSION['buffer']['input'];
 } else {
-    //$input = []; // PHP 5.4ˆÈ~‚È‚ç‚±‚Á‚¿‚Å‚à‚æ‚¢
+    //$input = []; // PHP 5.4ä»¥é™ãªã‚‰ã“ã£ã¡ã§ã‚‚ã‚ˆã„
     $input = array();
 }
 
-// ƒGƒ‰[“à—e‚ğæ“¾
+// ã‚¨ãƒ©ãƒ¼å†…å®¹ã‚’å–å¾—
 //$error_detail = $_SESSION['buffer']['error_detail'] ?? [];
 if (true === isset($_SESSION['buffer']['error_detail'])) {
     $error_detail = $_SESSION['buffer']['error_detail'];
 } else {
-    //$error_detail = []; // PHP 5.4ˆÈ~‚È‚ç‚±‚Á‚¿‚Å‚à‚æ‚¢
+    //$error_detail = []; // PHP 5.4ä»¥é™ãªã‚‰ã“ã£ã¡ã§ã‚‚ã‚ˆã„
     $error_detail = array();
 }
 
-// XSS‘Îô—pŠÖ”
+// XSSå¯¾ç­–ç”¨é–¢æ•°
 function h($s) {
     return htmlspecialchars($s, ENT_QUOTES);
 }
@@ -36,28 +36,29 @@ function h($s) {
 <body>
 <?php
   if (0 < count($error_detail)) {
-    echo '<div style="color: red;">ƒGƒ‰[‚ª‚ ‚è‚Ü‚·</div>';
+    echo '<div style="color: red;">ã‚¨ãƒ©ãƒ¼ãŒã‚ã‚Šã¾ã™</div>';
   }
 ?>
 
 <?php
   // error_must_email
   if (isset($error_detail['error_must_email'])) {
-    echo '<div style="color: red;">ƒƒAƒh‚Í•K{‚Å‚·B</div>';
+    echo '<div style="color: red;">ãƒ¡ã‚¢ãƒ‰ã¯å¿…é ˆã§ã™ã€‚</div>';
   }
+?>
 <html>
 <body>
 
 <?php
-if (0 < count($error_detail))@{
-	echo '<div style="color: red;"> ƒGƒ‰[‚ª‚ ‚è‚Ü‚·</div>';
+if (0 < count($error_detail)){
+	echo '<div style="color: red;"> ã‚¨ãƒ©ãƒ¼ãŒã‚ã‚Šã¾ã™</div>';
 
 }
 ?>
 <?php
 	//error_must_email
 	if (isset($error_detail['error_must_email'])) {
-	echo '<divstyle="color: red;"> ƒƒAƒh•K{‚Å‚·B</div>';
+	echo '<divstyle="color: red;"> ãƒ¡ã‚¢ãƒ‰å¿…é ˆã§ã™ã€‚</div>';
 
 }
 
