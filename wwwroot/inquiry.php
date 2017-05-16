@@ -25,6 +25,20 @@ if (true === isset($_SESSION['buffer']['error_detail'])) {
     $error_detail = array();
 }
 
+
+//CSRF トークン作成
+//XXX PHP 7 前提
+
+$csrf_token = hash('sha512', random_bytes(128));
+//var_dump($csrf_token);
+while (5 <= count(@$_SESSION['csrf_token'])){
+  array_shift($_SESSION['csrf_token']);
+}
+
+//CSRFトークンをSESSIONに入れておく：時間付き
+$_SESSION['csrf_token'][$csrf_token] = time();
+
+
 // XSS対策用関数
 function h($s) {
     return htmlspecialchars($s, ENT_QUOTES);
@@ -69,14 +83,15 @@ if (0 < count($error_detail)){
 		value="<?php echo h((string)@$input['email']); ?>"><br>
 
 	Name:<input type="text" name="name"
-		value="<?php echo h((string)@$input['name']); ?>">><br>
+		value="<?php echo h((string)@$input['name']); ?>"><br>
 
 	Birthday:<input type="text" name="birthday"
-		value="<?php echo h((string)@$input['birthday']); ?>">><br>
+		value="<?php echo h((string)@$input['birthday']); ?>"><br>
 
 	Inquiry:<textarea name="body">
 <?php echo h((string)@$input['body']); ?></textarea><br>
-
+	<input type="hidden" name="csrf_token"
+	  value="<?php echo h($csrf_token); ?>">
 	<button>Inquiry</button>
 </form>
 </body>

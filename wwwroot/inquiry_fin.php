@@ -1,66 +1,86 @@
 <?php
-// inquiry_fin.php
+// inquiry.php
 //
 ob_start();
 session_start();
 
-// 入力された情報を取得
+// 確認
+//var_dump($_SESSION);
+
+// 入力内容を取得
+//$input = $_SESSION['buffer']['input'] ?? []; // PHP 7.0以降ならこっち
+if (true === isset($_SESSION['buffer']['input'])) {
+    $input = $_SESSION['buffer']['input'];
+} else {
+    //$input = []; // PHP 5.4以降ならこっちでもよい
+    $input = array();
+}
+
+// エラー内容を取得
+//$error_detail = $_SESSION['buffer']['error_detail'] ?? [];
+if (true === isset($_SESSION['buffer']['error_detail'])) {
+    $error_detail = $_SESSION['buffer']['error_detail'];
+} else {
+    //$error_detail = []; // PHP 5.4以降ならこっちでもよい
+    $error_detail = array();
+}
+
+// CSRFトークンを作成
+// XXX PHP7前提
+$csrf_token = hash('sha512', random_bytes(128));
+//var_dump($csrf_token);
+
+// CSRFトークンは10個まで(で後で追加するので、ここでは4個以下に)
+while (10 <= count(@$_SESSION['csrf_token'])) {
+    array_shift($_SESSION['csrf_token']);
+}
+// CSRFトークンをSESSIONに入れておく:時間付き
+$_SESSION['csrf_token'][$csrf_token] = time();
+
+
+// XSS対策用関数
+function h($s) {
+    return htmlspecialchars($s, ENT_QUOTES);
+}
+
+?>
+<html>
+
+<body>
+<?php
+  if (0 < count($error_detail)) {
+    echo '<div style="color: red;">エラーがあります</div>';
+  }
+?>
+
+<?php
+  // error_must_email
+  if (isset($error_detail['error_must_email'])) {
+    echo '<div style="color: red;">メアドは必須です。</div>';
+  }
 /*
-$email = (string)@$_POST['email'];
-$email = (string)filter_input(INPUT_POST, 'email');
+error_must_body
+error_format_email
+error_format_birthday
 */
-$params = array(
-    'email', 'name', 'birthday', 'body'
-);
-$input_data = array();
-foreach($params  as  $p) {
-    $input_data[$p] = (string)@$_POST[$p];
-}
-var_dump($input_data);
+?>
+  <form action="./inquiry_fin.php" method="post">
+    emailアドレス(*):<input type="text" name="email"
+        value="<?php echo h((string)@$input['email']); ?>"><br>
 
-// validate(情報は正しい？)
-$error_detail = array(); // エラー情報格納用変数
+    名前:<input type="text" name="name"
+        value="<?php echo h((string)@$input['name']); ?>"><br>
 
-// 必須チェック
-$must_params = array('email', 'body');
-foreach($must_params  as  $p) {
-    if ('' === $input_data[$p]) {
-        // エラー処理
-        $error_detail["error_must_{$p}"] = true;
-    }
-}
+    誕生日:<input type="text" name="birthday"
+        value="<?php echo h((string)@$input['birthday']); ?>"><br>
 
-// 型チェック：email
-// XXX RFC非準拠のメアドはしらん！！
-if (false === filter_var($input_data['email'], FILTER_VALIDATE_EMAIL)) {
-    // エラー処理
-    $error_detail["error_format_email"] = true;
-}
+    問い合わせ内容<textarea name="body">
+<?php echo h((string)@$input['body']); ?></textarea><br>
 
-// 型チェック：日付
-if ('' !== $input_data['birthday']) {
-    if (false === strtotime($input_data['birthday'])) {
-        // エラー処理
-        $error_detail["error_format_birthday"] = true;
-    }
-}
+    <input type="hidden" name="csrf_token"
+        value="<?php echo h($csrf_token); ?>">
 
-// エラー判定
-if (array() !== $error_detail) {
-    // エラー内容をセッションに保持する
-    $_SESSION['buffer']['error_detail'] = $error_detail;
-    // 入力情報をセッションに保持する
-    $_SESSION['buffer']['input'] = $input_data;
-//var_dump($error_detail);
-    // echo 'エラーがあったらしい！！';
-    // 入力ページに突き返す
-    header('Location: ./inquiry.php');
-    exit;
-}
-// ダミー
-echo 'データのvalidateはOKでした！！';
-
-// 入力された情報をDBにinsert
-
-// 「ありがとう」Pageの出力
-
+    <button>問い合わせる</button>
+  </form>
+</body>
+</html>
