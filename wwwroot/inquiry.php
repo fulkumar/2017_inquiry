@@ -24,6 +24,7 @@ if (true === isset($_SESSION['buffer']['error_detail'])) {
     //$error_detail = []; // PHP 5.4以降ならこっちでもよい
     $error_detail = array();
 }
+var_dump($error_detail);
 
 
 //CSRF トークン作成
