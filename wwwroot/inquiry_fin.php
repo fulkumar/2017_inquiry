@@ -1,8 +1,9 @@
 <?php
 // inquiry_fin.php
 //
-ob_start();
-session_start();
+
+//
+require_once( __DIR__ . '/init.php');
 
 //
 require_once( __DIR__ . '/dbh.php');
@@ -33,7 +34,7 @@ if (false === isset($_SESSION['csrf_token'][$posted_token])) {
     $error_detail['error_csrf_token'] = true;
 } else {
     // tokenの寿命確認(check life)
-    $ttl = $_SESSION['csrf_token'][$\_posted_token];
+    $ttl = $_SESSION['csrf_token'][$_posted_token];
     if (time() >=  $ttl + 60) {
         // token作成から60秒以上経過しているのでNG
         $error_detail['error_csrf_timeover'] = true;
@@ -103,14 +104,9 @@ if (false === $r) {
     echo 'すみませんデータが取得できませんでした';
     exit;
 }
-?>
-// 「ありがとう」Pageの出力
-
-<html>
-<body>
-入力ありがとうございました。
-</body>
-</html>
+// テンプレートを指定して出力
+error_reporting(E_ALL & ~E_NOTICE);
+$smarty_obj->display('inquiry_fin.tpl');
 
 
 
