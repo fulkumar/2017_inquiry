@@ -1,33 +1,15 @@
 <?php
-//header_test.php
-//ヘッダーを出力するのでバッファリング
+// header_test.php
+// ヘッダを出力するのでバッファリング
+ob_start();
 
+// 少し待つ
+sleep(3);
 
-
-	//少し持つ
-sleep(5);
-
-
-
-
-
-
-
-//移動させる
-
-
-header('Location: http://google.com');
-
-
-
+// 余計な出力
 echo 'test';
 
-
-
-
-
-
-
-
+// 移動させる
+header('Location: http://google.com');
 
 

@@ -1,9 +1,7 @@
 <?php
-
-//session_2.php
-
+// session_2.php
 ob_start();
-session_start();
+session_start(); // セッションを開始
 
-//
-var_dump($_SESSION['rand']);//茵�腓�
+// 乱数を表示
+var_dump($_SESSION['rand']); // 表示
